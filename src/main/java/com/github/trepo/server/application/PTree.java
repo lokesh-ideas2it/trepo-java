@@ -13,7 +13,7 @@ import javax.inject.Singleton;
 public class PTree extends ResourceConfig {
 
     public PTree() {
-        packages("com.github.trepo.ptree.rest.core","com.github.trepo.server.provider");
+        packages("com.github.trepo.ptree.rest.core", "com.github.trepo.server.provider");
         register(new AbstractBinder() {
             @Override
             protected void configure() {
