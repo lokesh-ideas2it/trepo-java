@@ -38,7 +38,7 @@
 
         <!-- Set Tomcat path prefix to / -->
         <maven.tomcat.path>/</maven.tomcat.path>
-
+        <maven.tomcat.port>8081</maven.tomcat.port>
     </properties>
 
     <dependencies>
@@ -58,6 +58,13 @@
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-server</artifactId>
+        </dependency>
+
+        <!-- CORS -->
+        <dependency>
+            <groupId>com.thetransactioncompany</groupId>
+            <artifactId>cors-filter</artifactId>
+            <version>2.2.1</version>
         </dependency>
 
         <!-- GSON -->
@@ -84,12 +91,14 @@
 
     <build>
         <plugins>
-
             <!-- mvn install tomcat:run -->
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
+                <configuration>
+                    <port>8081</port>
+                </configuration>
             </plugin>
         </plugins>
     </build>

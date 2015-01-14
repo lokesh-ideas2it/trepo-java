@@ -12,7 +12,7 @@ public class VGraphFactory implements Factory<VGraph> {
     private VGraph graph;
 
     public VGraphFactory() {
-        graph = new VGraph(new TinkerGraph(), "localhost:8080");
+        graph = new VGraph(new TinkerGraph(), "localhost:8081");
     }
 
     @Override
