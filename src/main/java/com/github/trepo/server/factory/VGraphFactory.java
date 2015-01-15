@@ -1,8 +1,10 @@
 package com.github.trepo.server.factory;
 
+import com.github.trepo.server.singleton.VGraphSingleton;
 import com.github.trepo.vgraph.VGraph;
-import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
 import org.glassfish.hk2.api.Factory;
+
+import java.util.logging.Logger;
 
 /**
  * @author John Clark.
@@ -12,7 +14,7 @@ public class VGraphFactory implements Factory<VGraph> {
     private VGraph graph;
 
     public VGraphFactory() {
-        graph = new VGraph(new TinkerGraph(), "localhost:8081");
+        graph = VGraphSingleton.getInstance().getGraphDb();
     }
 
     @Override
@@ -24,4 +26,5 @@ public class VGraphFactory implements Factory<VGraph> {
     public void dispose(VGraph vGraph) {
 
     }
+
 }

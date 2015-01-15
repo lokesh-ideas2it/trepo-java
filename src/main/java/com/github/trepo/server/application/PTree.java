@@ -13,12 +13,13 @@ import javax.inject.Singleton;
 public class PTree extends ResourceConfig {
 
     public PTree() {
-        packages("com.github.trepo.ptree.rest.core", "com.github.trepo.server.provider");
+        packages("com.github.trepo.ptree.rest.core", "com.github.trepo.server.provider", "com.github.trepo.server.listener");
         register(new AbstractBinder() {
             @Override
             protected void configure() {
                 bindFactory(VGraphFactory.class).to(VGraph.class).in(Singleton.class);
             }
         });
+
     }
 }

@@ -28,4 +28,8 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+    <listener>
+        <listener-class>com.github.trepo.server.listener.Neo4jBootstrapper</listener-class>
+    </listener>
+
 </web-app>
