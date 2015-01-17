@@ -27,7 +27,7 @@ public class Neo4jBootstrapper implements ServletContextListener {
         logger.log(Level.INFO, "STARTING");
 
         Neo4j2Graph g = new Neo4j2Graph("/tmp/neo4j");
-        g.setCheckElementsInTransaction(true);
+        //g.setCheckElementsInTransaction(true);
 
         logger.log(Level.INFO, "-----Vertexes");
         for (Vertex v: g.getVertices()) {
@@ -35,7 +35,7 @@ public class Neo4jBootstrapper implements ServletContextListener {
         }
 
         graph = new VGraph(g, "localhost:8081");
-        VGraphSingleton.init(graph);
+        VGraphSingleton.init(graph, g);
 
         for (String idx: g.getIndexedKeys(Vertex.class)) {
             logger.log(Level.INFO, "-----IDX: "+idx);
