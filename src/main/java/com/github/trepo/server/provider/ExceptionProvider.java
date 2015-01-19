@@ -8,10 +8,12 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 /**
+ * Maps any other exception.
  * @author John Clark.
  */
 @Provider
 public class ExceptionProvider implements ExceptionMapper<Exception> {
+
     @Override
     public Response toResponse(Exception e) {
         return Response

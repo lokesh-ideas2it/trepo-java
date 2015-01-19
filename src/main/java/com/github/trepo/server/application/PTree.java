@@ -6,14 +6,15 @@ import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.process.internal.RequestScoped;
 import org.glassfish.jersey.server.ResourceConfig;
 
-import javax.inject.Singleton;
-import javax.ws.rs.ApplicationPath;
-
 /**
+ * Configure the pTree Application.
  * @author John Clark.
  */
 public class PTree extends ResourceConfig {
 
+    /**
+     * Register packages and vGraph factory.
+     */
     public PTree() {
         packages("com.github.trepo.ptree.rest.core", "com.github.trepo.server.provider");
         register(new AbstractBinder() {

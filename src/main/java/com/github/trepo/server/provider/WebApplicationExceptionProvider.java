@@ -9,10 +9,12 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 /**
+ * Maps Web Application Exceptions.
  * @author John Clark.
  */
 @Provider
 public class WebApplicationExceptionProvider implements ExceptionMapper<WebApplicationException> {
+
     @Override
     public Response toResponse(WebApplicationException e) {
 

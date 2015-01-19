@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
@@ -20,6 +19,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
 /**
+ * Serialize/de-serialize JSON using GSON.
  * @author John Clark.
  */
 @Provider
@@ -29,10 +29,20 @@ public class GsonJsonProvider implements
         MessageBodyWriter<Object>,
         MessageBodyReader<Object> {
 
+    /**
+     * Our charset.
+     */
     private static final String UTF_8 = "UTF-8";
 
+    /**
+     * our gson instance.
+     */
     private Gson gson;
 
+    /**
+     * Gets the gson instance, creating it if necessary.
+     * @return The gson instance.
+     */
     private Gson getGson() {
         if (gson == null) {
             final GsonBuilder gsonBuilder = new GsonBuilder();
@@ -52,7 +62,7 @@ public class GsonJsonProvider implements
                            Annotation[] annotations,
                            MediaType mediaType,
                            MultivaluedMap<String, String> httpHeaders,
-                           InputStream entityStream) throws IOException, WebApplicationException {
+                           InputStream entityStream) throws IOException {
 
         try (InputStreamReader streamReader = new InputStreamReader(entityStream, UTF_8)) {
             Type jsonType;
@@ -77,7 +87,9 @@ public class GsonJsonProvider implements
     }
 
     @Override
-    public void writeTo(Object o, Class<?> aClass, Type type, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, Object> stringObjectMultivaluedMap, OutputStream outputStream) throws IOException, WebApplicationException {
+    public void writeTo(Object o, Class<?> aClass, Type type, Annotation[] annotations,
+                        MediaType mediaType, MultivaluedMap<String, Object> stringObjectMultivaluedMap,
+                        OutputStream outputStream) throws IOException {
         try (OutputStreamWriter writer = new OutputStreamWriter(outputStream, UTF_8)) {
             Type jsonType;
             if (aClass.equals(type)) {

@@ -2,15 +2,11 @@ package com.github.trepo.server.listener;
 
 import com.github.trepo.server.singleton.VGraphSingleton;
 import com.github.trepo.vgraph.VGraph;
-import com.github.trepo.vgraph.util.Property;
-import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.neo4j2.Neo4j2Graph;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author John Clark.

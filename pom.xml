@@ -39,8 +39,9 @@
         <jersey.version>2.13</jersey.version>
         <jetty.version>9.2.6.v20141205</jetty.version>
 
+        <!-- These get copies into src/main/resources/trepo.properties for use in / -->
         <trepo.version>${project.version}</trepo.version>
-        <trepo.name>${project.name}</trepo.name>
+        <trepo.name>${project.name} (Java)</trepo.name>
         <trepo.ptree>${ptree.version}</trepo.ptree>
         <trepo.vgraph>0.3.1</trepo.vgraph> <!-- Figure out how to pull this through -->
         <trepo.graph>Neo4j 2 - blueprints-neo4j2-graph ${blueprints.version}</trepo.graph>
@@ -56,45 +57,59 @@
             <version>${ptree.version}</version>
         </dependency>
 
-        <!-- The main JavaEE -->
-        <dependency>
-            <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-servlet</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-server</artifactId>
-            <version>${jetty.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-servlet</artifactId>
-            <version>${jetty.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-servlets</artifactId>
-            <version>${jetty.version}</version>
-        </dependency>
-
-        <!-- GSON -->
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.3.1</version>
-        </dependency>
-
+        <!-- Blueprints graph -->
         <dependency>
             <groupId>com.tinkerpop.blueprints</groupId>
             <artifactId>blueprints-neo4j2-graph</artifactId>
             <version>${blueprints.version}</version>
         </dependency>
 
+        <!-- The main Jetty Server -->
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
-            <scope>provided</scope>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>${jetty.version}</version>
+        </dependency>
+
+        <!-- To bridge from Jersey to Jetty -->
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-servlet</artifactId>
+        </dependency>
+
+        <!-- Jetty Servlets -->
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlet</artifactId>
+            <version>${jetty.version}</version>
+        </dependency>
+
+        <!-- Gives us the CORS filter servlet -->
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlets</artifactId>
+            <version>${jetty.version}</version>
+        </dependency>
+
+        <!-- GSON for JSON handling -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.3.1</version>
+        </dependency>
+
+        <!-- Testing -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>6.8.8</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easytesting</groupId>
+            <artifactId>fest-assert-core</artifactId>
+            <version>2.0M5</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
@@ -114,6 +129,7 @@
 
     <build>
         <plugins>
+            <!-- Add dependencies to jar -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
@@ -138,6 +154,8 @@
                 </executions>
             </plugin>
         </plugins>
+
+        <!-- Copy properties into src/main/resources/trepo.properties -->
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
