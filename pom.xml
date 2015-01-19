@@ -36,6 +36,7 @@
 
         <jersey.version>2.13</jersey.version>
 
+        <jetty.version>9.2.6.v20141205</jetty.version>
         <!-- Set Tomcat path prefix to / -->
         <maven.tomcat.path>/</maven.tomcat.path>
         <maven.tomcat.port>8081</maven.tomcat.port>
@@ -53,18 +54,22 @@
         <!-- The main JavaEE -->
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-servlet-core</artifactId>
+            <artifactId>jersey-container-servlet</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-server</artifactId>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>${jetty.version}</version>
         </dependency>
-
-        <!-- CORS -->
         <dependency>
-            <groupId>com.thetransactioncompany</groupId>
-            <artifactId>cors-filter</artifactId>
-            <version>2.2.1</version>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlet</artifactId>
+            <version>${jetty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlets</artifactId>
+            <version>${jetty.version}</version>
         </dependency>
 
         <!-- GSON -->
@@ -85,11 +90,6 @@
             <artifactId>javax.servlet-api</artifactId>
             <version>3.1.0</version>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-jdk-http</artifactId>
         </dependency>
 
     </dependencies>
@@ -116,7 +116,7 @@
                     <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
-                            <mainClass>com.github.trepo.server.Server</mainClass>
+                            <mainClass>com.github.trepo.server.TrepoServer</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

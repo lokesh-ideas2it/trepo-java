@@ -25,13 +25,11 @@ public class VGraphFactory implements Factory<VGraph> {
     @Override
     @RequestScoped
     public VGraph provide() {
-        System.out.println("providing " + graph);
         return graph;
     }
 
     @Override
     public void dispose(VGraph vGraph) {
-        System.out.println("Cleaning up " + graph);
         neo4j2Graph.commit();
     }
 

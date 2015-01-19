@@ -18,36 +18,22 @@ import java.util.logging.Logger;
 @WebListener
 public class Neo4jBootstrapper implements ServletContextListener {
 
-    Logger logger = Logger.getLogger("TESTING");
-
-    private VGraph graph;
+    private Neo4j2Graph neoGraph;
+    private VGraph vGraph;
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        logger.log(Level.INFO, "STARTING");
-
-        Neo4j2Graph g = new Neo4j2Graph("/tmp/neo4j");
-        //g.setCheckElementsInTransaction(true);
-
-        logger.log(Level.INFO, "-----Vertexes");
-        for (Vertex v: g.getVertices()) {
-            logger.log(Level.INFO, "Vertex: "+v.getId()+" - "+v.getProperty(Property.ID));
-        }
-
-        graph = new VGraph(g, "localhost:8081");
-        VGraphSingleton.init(graph, g);
-
-        for (String idx: g.getIndexedKeys(Vertex.class)) {
-            logger.log(Level.INFO, "-----IDX: "+idx);
-        }
-        g.commit();
+        System.out.println("Initializing vGraph...");
+        neoGraph = new Neo4j2Graph("/tmp/neo4j");
+        vGraph = new VGraph(neoGraph, "localhost:8081");
+        VGraphSingleton.init(vGraph, neoGraph);
+        System.out.println("vGraph Initialized");
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-        logger.log(Level.INFO, "STOPPING");
-        if (graph != null) {
-            graph.shutdown();
-        }
+        System.out.println("Stopping vGraph");
+        vGraph.shutdown();
+        System.out.println("vGraph Stopped");
     }
 }

@@ -12,7 +12,6 @@ import javax.ws.rs.ApplicationPath;
 /**
  * @author John Clark.
  */
-@ApplicationPath("/*")
 public class PTree extends ResourceConfig {
 
     public PTree() {
