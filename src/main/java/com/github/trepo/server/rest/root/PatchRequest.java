@@ -1,6 +1,5 @@
 package com.github.trepo.server.rest.root;
 
-import com.github.trepo.server.model.CommitRequestModel;
 import com.github.trepo.vgraph.Commit;
 import com.github.trepo.vgraph.VGraph;
 import com.github.trepo.vgraph.exception.VGraphException;
@@ -15,10 +14,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
+ * Patch vGraph with a commit.
  * @author John Clark.
  */
-@Path("/commit")
-public class CommitRequest {
+@Path("/patch")
+public class PatchRequest {
 
     /**
      * Our vGraph instance.
@@ -26,31 +26,34 @@ public class CommitRequest {
     private VGraph graph;
 
     /**
-     * Commit any outstanding changes in vGraph.
-     * @param request The Commit Request.
-     * @return 201 on success.
+     * Patch vGraph with the supplied commit.
+     * @param commit The commit to apply.
+     * @return 204.
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response post(CommitRequestModel request) {
+    public Response post(Commit commit) {
 
-        if (request == null) {
-            throw new WebApplicationException("A valid Commit Request is required", Response.Status.BAD_REQUEST);
+        if (commit == null) {
+            throw new WebApplicationException("A valid Commit is required", Response.Status.BAD_REQUEST);
         }
 
-        request.validate();
+        try {
+            commit.validate();
+        } catch (VGraphException e) {
+            throw new WebApplicationException("Invalid commit - " + e.getMessage(), e, Response.Status.BAD_REQUEST);
+        }
 
         try {
-            Commit commit = graph.commit(request.getAuthor(), request.getEmail(), request.getMessage());
+            graph.patch(commit);
 
             return Response
-                    .status(Response.Status.CREATED)
-                    .entity(commit)
+                    .status(Response.Status.NO_CONTENT)
                     .build();
 
         } catch (VGraphException e) {
-            throw new WebApplicationException("Commit failed - " + e.getMessage(), e);
+            throw new WebApplicationException("Patch failed - " + e.getMessage(), e);
         }
     }
 
