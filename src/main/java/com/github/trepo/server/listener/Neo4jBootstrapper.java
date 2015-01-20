@@ -9,18 +9,21 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
 /**
+ * Bootstrap and shutdown our Neo4j/vGraph instance.
  * @author John Clark.
  */
 @WebListener
 public class Neo4jBootstrapper implements ServletContextListener {
 
-    private Neo4j2Graph neoGraph;
+    /**
+     * Our private vGraph instance.
+     */
     private VGraph vGraph;
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         System.out.println("Initializing vGraph...");
-        neoGraph = new Neo4j2Graph("/tmp/neo4j");
+        Neo4j2Graph neoGraph = new Neo4j2Graph("/tmp/neo4j");
         vGraph = new VGraph(neoGraph, "localhost:8081");
         VGraphSingleton.init(vGraph, neoGraph);
         System.out.println("vGraph Initialized");

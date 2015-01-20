@@ -2,6 +2,8 @@ package com.github.trepo.server.model;
 
 import org.testng.annotations.Test;
 
+import javax.ws.rs.WebApplicationException;
+
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
@@ -18,18 +20,48 @@ public class CommitRequestModelTest {
         assertThat(model.getMessage()).isEqualTo("message");
     }
 
+    /**
+     * validate
+     */
     @Test
     public void validate_shouldErrorOnNullAuthor() {
-        // TODO
+        CommitRequestModel model = new CommitRequestModel(null, "email", "message");
+
+        try {
+            model.validate();
+        } catch (WebApplicationException e) {
+            assertThat(e.getResponse().getStatus()).isEqualTo(400);
+            assertThat(e.getMessage()).isEqualTo("author missing");
+        }
     }
 
     @Test
     public void validate_shouldErrorOnNullEmail() {
-        // TODO
+        CommitRequestModel model = new CommitRequestModel("author", null, "message");
+
+        try {
+            model.validate();
+        } catch (WebApplicationException e) {
+            assertThat(e.getResponse().getStatus()).isEqualTo(400);
+            assertThat(e.getMessage()).isEqualTo("email missing");
+        }
     }
 
     @Test
     public void validate_shouldErrorOnNullMessage() {
-        // TODO
+        CommitRequestModel model = new CommitRequestModel("author", "email", null);
+
+        try {
+            model.validate();
+        } catch (WebApplicationException e) {
+            assertThat(e.getResponse().getStatus()).isEqualTo(400);
+            assertThat(e.getMessage()).isEqualTo("message missing");
+        }
+    }
+
+    @Test
+    public void validate_shouldWork() {
+        CommitRequestModel model = new CommitRequestModel("author", "email", "message");
+        model.validate();
     }
 }

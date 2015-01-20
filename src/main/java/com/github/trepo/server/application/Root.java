@@ -7,10 +7,14 @@ import org.glassfish.jersey.process.internal.RequestScoped;
 import org.glassfish.jersey.server.ResourceConfig;
 
 /**
+ * Configure our root (/) application.
  * @author John Clark.
  */
 public class Root extends ResourceConfig {
 
+    /**
+     * Register packages and vGraph factory.
+     */
     public Root() {
         packages("com.github.trepo.server.rest.root", "com.github.trepo.server.provider");
         register(new AbstractBinder() {
