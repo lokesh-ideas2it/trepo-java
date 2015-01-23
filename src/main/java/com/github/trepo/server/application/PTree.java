@@ -16,7 +16,7 @@ public class PTree extends ResourceConfig {
      * Register packages and vGraph factory.
      */
     public PTree() {
-        packages("com.github.trepo.ptree.rest.core", "com.github.trepo.server.provider");
+        packages("com.github.trepo.ptree.rest", "com.github.trepo.server.provider");
         register(new AbstractBinder() {
             @Override
             protected void configure() {
