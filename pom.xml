@@ -43,7 +43,7 @@
         <trepo.version>${project.version}</trepo.version>
         <trepo.name>${project.name} (Java)</trepo.name>
         <trepo.ptree>${ptree.version}</trepo.ptree>
-        <trepo.vgraph>0.3.1</trepo.vgraph> <!-- Figure out how to pull this through -->
+        <trepo.vgraph>0.4.0</trepo.vgraph> <!-- Figure out how to pull this through -->
         <trepo.graph>Neo4j 2 - blueprints-neo4j2-graph ${blueprints.version}</trepo.graph>
         <trepo.server>Jetty - ${jetty.version}</trepo.server>
     </properties>
