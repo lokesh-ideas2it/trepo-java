@@ -3,7 +3,7 @@ package com.github.trepo.server.rest.root;
 import com.github.trepo.server.model.CommitRequestModel;
 import com.github.trepo.vgraph.Commit;
 import com.github.trepo.vgraph.VGraph;
-import com.github.trepo.vgraph.exception.VGraphException;
+import com.github.trepo.vgraph.VGraphException;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;

@@ -2,6 +2,7 @@ package com.github.trepo.server.listener;
 
 import com.github.trepo.server.singleton.VGraphSingleton;
 import com.github.trepo.vgraph.VGraph;
+import com.github.trepo.vgraph.blueprints.BlueprintsVGraph;
 import com.tinkerpop.blueprints.impls.neo4j2.Neo4j2Graph;
 
 import javax.servlet.ServletContextEvent;
@@ -18,13 +19,13 @@ public class Neo4jBootstrapper implements ServletContextListener {
     /**
      * Our private vGraph instance.
      */
-    private VGraph vGraph;
+    private BlueprintsVGraph vGraph;
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         System.out.println("Initializing vGraph...");
         Neo4j2Graph neoGraph = new Neo4j2Graph("/tmp/neo4j");
-        vGraph = new VGraph(neoGraph, "localhost:8081");
+        vGraph = new BlueprintsVGraph(neoGraph, "localhost:8081");
         VGraphSingleton.init(vGraph, neoGraph);
         System.out.println("vGraph Initialized");
     }

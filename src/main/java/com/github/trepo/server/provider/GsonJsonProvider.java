@@ -46,7 +46,7 @@ public class GsonJsonProvider implements
     private Gson getGson() {
         if (gson == null) {
             final GsonBuilder gsonBuilder = new GsonBuilder();
-            gson = gsonBuilder.create();
+            gson = gsonBuilder.serializeNulls().create();
         }
         return gson;
     }
