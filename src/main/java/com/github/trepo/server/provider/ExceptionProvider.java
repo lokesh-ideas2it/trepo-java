@@ -16,6 +16,8 @@ public class ExceptionProvider implements ExceptionMapper<Exception> {
 
     @Override
     public Response toResponse(Exception e) {
+        // TODO put stackTrace into traditional logging
+        e.printStackTrace();
         return Response
                 .status(Response.Status.INTERNAL_SERVER_ERROR)
                 .type(MediaType.APPLICATION_JSON)
