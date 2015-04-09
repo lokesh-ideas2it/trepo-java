@@ -2,6 +2,7 @@ package com.github.trepo.server;
 
 import com.github.trepo.server.application.PTree;
 import com.github.trepo.server.application.Root;
+import com.github.trepo.server.application.Traversal;
 import com.github.trepo.server.listener.Neo4jBootstrapper;
 import com.github.trepo.server.singleton.VGraphSingleton;
 import com.github.trepo.vgraph.VGraph;
@@ -39,6 +40,10 @@ public class TrepoServer {
         // Root
         ServletHolder root = new ServletHolder(new ServletContainer(new Root()));
         context.addServlet(root, "/*");
+
+        // Traversal
+        ServletHolder traversal = new ServletHolder(new ServletContainer(new Traversal()));
+        context.addServlet(traversal, "/traversal/*");
 
         // pTree
         ServletHolder pTree = new ServletHolder(new ServletContainer(new PTree()));
