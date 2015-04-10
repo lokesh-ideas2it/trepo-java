@@ -17,7 +17,12 @@ import javax.servlet.annotation.WebListener;
 public class Neo4jBootstrapper implements ServletContextListener {
 
     /**
-     *
+     * Our repository identifier.
+     */
+    private String repository;
+
+    /**
+     * Our private Neo4j2 Graph.
      */
     private Neo4j2Graph neoGraph;
 
@@ -26,11 +31,19 @@ public class Neo4jBootstrapper implements ServletContextListener {
      */
     private BlueprintsVGraph vGraph;
 
+    public Neo4jBootstrapper(String repo) {
+        repository = repo;
+    }
+
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         System.out.println("Initializing vGraph...");
-        neoGraph = new Neo4j2Graph("/tmp/neo4j");
-        vGraph = new BlueprintsVGraph(neoGraph, "localhost:8081");
+        String dir = "/tmp/neo4j";
+        if (System.getProperty("db") != null) {
+            dir = System.getProperty("db");
+        }
+        neoGraph = new Neo4j2Graph(dir);
+        vGraph = new BlueprintsVGraph(neoGraph, repository);
         neoGraph.commit();
         VGraphSingleton.init(vGraph, neoGraph);
         System.out.println("vGraph Initialized");

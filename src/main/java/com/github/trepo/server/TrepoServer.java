@@ -41,7 +41,7 @@ public class TrepoServer {
                 = new ServletContextHandler(server, "/");
 
         // Add vGraph bootstrapper
-        context.addEventListener(new Neo4jBootstrapper());
+        context.addEventListener(new Neo4jBootstrapper("http://localhost:"+port));
 
         // Root
         ServletHolder root = new ServletHolder(new ServletContainer(new Root()));

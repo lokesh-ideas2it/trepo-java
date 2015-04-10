@@ -14,7 +14,7 @@ public class Neo4jBootstrapperTest {
 
         // TODO eventually test contextInitialized/contextDestroyed
 
-        Neo4jBootstrapper b = new Neo4jBootstrapper();
+        Neo4jBootstrapper b = new Neo4jBootstrapper("localhost");
 
         assertThat(b).isNotNull();
     }
