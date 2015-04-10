@@ -14,6 +14,7 @@ import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.glassfish.jersey.servlet.ServletContainer;
 
 import javax.servlet.DispatcherType;
+import java.io.IOException;
 import java.util.EnumSet;
 
 /**
@@ -66,8 +67,8 @@ public class TrepoServer {
         server.start();
         server.join();
 
-        /*
-        uncomment to allow for debugging
+
+        //uncomment to allow for debugging
 
         try {
             System.in.read();
@@ -76,7 +77,7 @@ public class TrepoServer {
             e.printStackTrace();
         }
         System.exit(0);
-        */
+
 
     }
 }

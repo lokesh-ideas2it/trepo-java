@@ -1,6 +1,7 @@
 package com.github.trepo.server.rest.traversal;
 
 import com.github.trepo.ptree.model.core.PersonModel;
+import com.github.trepo.ptree.model.core.PersonNameModel;
 import com.github.trepo.ptree.model.what.BirthModel;
 import com.github.trepo.ptree.model.what.DeathModel;
 import com.github.trepo.ptree.model.what.NameModel;
@@ -74,17 +75,17 @@ public class Family {
         family.put("death", death);
 
         // Get Parents
-        HashSet<PersonModel> parents = new HashSet<>();
+        HashSet<PersonNameModel> parents = new HashSet<>();
         for (Node node: person.getNodes(Direction.OUT, Label.BIRTH_CHILD_REF)) {
             itr = node.getNodes(Direction.IN, Label.BIRTH_FATHER_REF).iterator();
             if (itr.hasNext()) {
-                PersonModel father = new PersonModel(graph, itr.next().getId());
+                PersonNameModel father = new PersonNameModel(graph, itr.next().getId());
                 father.readFromGraph();
                 parents.add(father);
             }
             itr = node.getNodes(Direction.IN, Label.BIRTH_MOTHER_REF).iterator();
             if (itr.hasNext()) {
-                PersonModel mother = new PersonModel(graph, itr.next().getId());
+                PersonNameModel mother = new PersonNameModel(graph, itr.next().getId());
                 mother.readFromGraph();
                 parents.add(mother);
             }
@@ -92,11 +93,11 @@ public class Family {
         family.put("parents", parents);
 
         // Get Spouses
-        HashSet<PersonModel> spouses = new HashSet<>();
+        HashSet<PersonNameModel> spouses = new HashSet<>();
         for (Node node: person.getNodes(Direction.OUT, Label.MARRIAGE_SPOUSE_REF)) {
             for (Node spouse: node.getNodes(Direction.IN, Label.MARRIAGE_SPOUSE_REF)) {
                 if (!person.getId().equals(spouse.getId())) {
-                    PersonModel spouseModel = new PersonModel(graph, spouse.getId());
+                    PersonNameModel spouseModel = new PersonNameModel(graph, spouse.getId());
                     spouseModel.readFromGraph();
                     spouses.add(spouseModel);
                 }
@@ -105,11 +106,11 @@ public class Family {
         family.put("spouses", spouses);
 
         // Get Children
-        HashSet<PersonModel> children = new HashSet<>();
+        HashSet<PersonNameModel> children = new HashSet<>();
         for (Node node: person.getNodes(Direction.OUT, Label.BIRTH_FATHER_REF, Label.BIRTH_MOTHER_REF)) {
             itr = node.getNodes(Direction.IN, Label.BIRTH_CHILD_REF).iterator();
             if (itr.hasNext()) {
-                PersonModel child = new PersonModel(graph, itr.next().getId());
+                PersonNameModel child = new PersonNameModel(graph, itr.next().getId());
                 child.readFromGraph();
                 children.add(child);
             }

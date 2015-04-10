@@ -17,6 +17,11 @@ import javax.servlet.annotation.WebListener;
 public class Neo4jBootstrapper implements ServletContextListener {
 
     /**
+     *
+     */
+    private Neo4j2Graph neoGraph;
+
+    /**
      * Our private vGraph instance.
      */
     private BlueprintsVGraph vGraph;
@@ -24,8 +29,9 @@ public class Neo4jBootstrapper implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         System.out.println("Initializing vGraph...");
-        Neo4j2Graph neoGraph = new Neo4j2Graph("/tmp/neo4j");
+        neoGraph = new Neo4j2Graph("/tmp/neo4j");
         vGraph = new BlueprintsVGraph(neoGraph, "localhost:8081");
+        neoGraph.commit();
         VGraphSingleton.init(vGraph, neoGraph);
         System.out.println("vGraph Initialized");
     }
@@ -33,6 +39,7 @@ public class Neo4jBootstrapper implements ServletContextListener {
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
         System.out.println("Stopping vGraph");
+        neoGraph.commit();
         vGraph.shutdown();
         System.out.println("vGraph Stopped");
     }
