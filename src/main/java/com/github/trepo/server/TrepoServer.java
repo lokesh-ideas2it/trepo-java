@@ -29,9 +29,14 @@ public class TrepoServer {
         System.setProperty("org.eclipse.jetty.util.log.class", "org.eclipse.jetty.util.log.StdErrLog");
         System.setProperty("org.eclipse.jetty.LEVEL", "INFO");
 
+        int port = 8081;
+        String portOption = System.getProperty("port");
+        if (portOption != null) {
+            port = Integer.parseInt(portOption);
+        }
 
         // Setup Server
-        final Server server = new Server(8081);
+        final Server server = new Server(port);
         ServletContextHandler context
                 = new ServletContextHandler(server, "/");
 
