@@ -1,6 +1,5 @@
 package com.github.trepo.server.rest.traversal;
 
-import com.github.trepo.ptree.model.core.PersonModel;
 import com.github.trepo.ptree.model.core.PersonNameModel;
 import com.github.trepo.ptree.model.what.BirthModel;
 import com.github.trepo.ptree.model.what.DeathModel;
@@ -18,10 +17,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 
 /**
  * @author John Clark.
@@ -45,7 +44,11 @@ public class Family {
             throw new WebApplicationException("Person Not Found", Response.Status.NOT_FOUND);
         }
 
-        HashMap<String, Object> family = new HashMap<>();
+        LinkedHashMap<String, Object> family = new LinkedHashMap<>();
+
+        family.put("id", id);
+        family.put("repo", person.getRepo());
+
 
         // Get Name
         NameModel name = null;
