@@ -1,5 +1,7 @@
 package com.github.trepo.server.provider;
 
+import com.github.trepo.npipes.Step;
+import com.github.trepo.npipes.gson.StepTypeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -46,7 +48,10 @@ public class GsonJsonProvider implements
     private Gson getGson() {
         if (gson == null) {
             final GsonBuilder gsonBuilder = new GsonBuilder();
-            gson = gsonBuilder.serializeNulls().create();
+            gson = gsonBuilder
+                    .serializeNulls()
+                    .registerTypeHierarchyAdapter(Step.class, new StepTypeAdapter())
+                    .create();
         }
         return gson;
     }

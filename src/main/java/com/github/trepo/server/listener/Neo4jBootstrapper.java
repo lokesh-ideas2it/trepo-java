@@ -42,6 +42,7 @@ public class Neo4jBootstrapper implements ServletContextListener {
         if (System.getProperty("db") != null) {
             dir = System.getProperty("db");
         }
+        System.out.println("vGraph dir: " + dir);
         neoGraph = new Neo4j2Graph(dir);
         vGraph = new BlueprintsVGraph(neoGraph, repository);
         neoGraph.commit();

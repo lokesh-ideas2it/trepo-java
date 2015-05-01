@@ -35,6 +35,7 @@
         <maven.compiler.target>1.7</maven.compiler.target>
 
         <ptree.version>0.1.0-SNAPSHOT</ptree.version>
+        <npipes.version>0.1.0-SNAPSHOT</npipes.version>
         <vgraph.version>0.5.0-SNAPSHOT</vgraph.version>
         <blueprints.version>2.6.0</blueprints.version>
         <jersey.version>2.13</jersey.version>
@@ -44,6 +45,7 @@
         <trepo.version>${project.version}</trepo.version>
         <trepo.name>${project.name} (Java)</trepo.name>
         <trepo.ptree>${ptree.version}</trepo.ptree>
+        <trepo.npipes>${npipes.version}</trepo.npipes>
         <trepo.vgraph>${vgraph.version}</trepo.vgraph>
         <trepo.graph>Neo4j 2 - blueprints-neo4j2-graph ${blueprints.version}</trepo.graph>
         <trepo.server>Jetty - ${jetty.version}</trepo.server>
@@ -55,6 +57,13 @@
         <dependency>
             <groupId>com.github.trepo</groupId>
             <artifactId>ptree</artifactId>
+            <version>${ptree.version}</version>
+        </dependency>
+
+        <!-- nPipes -->
+        <dependency>
+            <groupId>com.github.trepo</groupId>
+            <artifactId>npipes</artifactId>
             <version>${ptree.version}</version>
         </dependency>
 

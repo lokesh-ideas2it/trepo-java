@@ -1,5 +1,6 @@
 package com.github.trepo.server;
 
+import com.github.trepo.server.application.NPipes;
 import com.github.trepo.server.application.PTree;
 import com.github.trepo.server.application.Root;
 import com.github.trepo.server.application.Traversal;
@@ -50,6 +51,10 @@ public class TrepoServer {
         // Traversal
         ServletHolder traversal = new ServletHolder(new ServletContainer(new Traversal()));
         context.addServlet(traversal, "/traversal/*");
+
+        // nPipes
+        ServletHolder nPipes = new ServletHolder(new ServletContainer(new NPipes()));
+        context.addServlet(nPipes, "/npipes/*");
 
         // pTree
         ServletHolder pTree = new ServletHolder(new ServletContainer(new PTree()));

@@ -1,12 +1,17 @@
 package com.github.trepo.server.rest.traversal;
 
+import com.github.trepo.npipes.Query;
+import com.github.trepo.npipes.Traversal;
+import com.github.trepo.npipes.TraversalBuilder;
 import com.github.trepo.ptree.model.core.PersonNameModel;
 import com.github.trepo.ptree.model.what.BirthModel;
 import com.github.trepo.ptree.model.what.DeathModel;
 import com.github.trepo.ptree.model.what.NameModel;
+import com.github.trepo.ptree.ref.Key;
 import com.github.trepo.ptree.ref.Label;
 import com.github.trepo.vgraph.Direction;
 import com.github.trepo.vgraph.Node;
+import com.github.trepo.vgraph.SpecialProperty;
 import com.github.trepo.vgraph.VGraph;
 
 import javax.inject.Inject;
@@ -18,9 +23,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
+import java.util.*;
 
 /**
  * @author John Clark.
@@ -44,6 +47,150 @@ public class Family {
             throw new WebApplicationException("Person Not Found", Response.Status.NOT_FOUND);
         }
 
+        Query query = new Query();
+
+        // Name
+        query.addTraversal(new TraversalBuilder()
+                .v(id)
+                .set("traversal", "name")
+                .out(Label.NAME_PERSON_REF)
+                .store(Key.NAME_NAME, "name")
+                .traversal());
+
+        // Birth
+        query.addTraversal(new TraversalBuilder()
+                .v(id)
+                .set("traversal", "birth")
+                .out(Label.BIRTH_CHILD_REF)
+                .as("birth")
+                .out(Label.BIRTH_DATE_REF)
+                .store(Key.DATE_ORIGINAL, "original")
+                .store(Key.DATE_FORMAL, "formal")
+                .back("birth")
+                .out(Label.BIRTH_PLACE_REF)
+                .store(Key.PLACE_NAME, "place")
+                .traversal());
+
+        // Death
+        query.addTraversal(new TraversalBuilder()
+                .v(id)
+                .set("traversal", "death")
+                .out(Label.DEATH_PERSON_REF)
+                .as("death")
+                .out(Label.DEATH_DATE_REF)
+                .store(Key.DATE_ORIGINAL, "original")
+                .store(Key.DATE_FORMAL, "formal")
+                .back("death")
+                .out(Label.DEATH_PLACE_REF)
+                .store(Key.PLACE_NAME, "place")
+                .traversal());
+
+        // Mother
+        query.addTraversal(new TraversalBuilder()
+                .v(id)
+                .set("traversal", "mother")
+                .out(Label.BIRTH_CHILD_REF)
+                .in(Label.BIRTH_MOTHER_REF)
+                .store(SpecialProperty.ID, "id")
+                .store(SpecialProperty.REPO, "repo")
+                .out(Label.NAME_PERSON_REF)
+                .store(Key.NAME_NAME, "name")
+                .traversal());
+
+        // Father
+        query.addTraversal(new TraversalBuilder()
+                .v(id)
+                .set("traversal", "father")
+                .out(Label.BIRTH_CHILD_REF)
+                .in(Label.BIRTH_FATHER_REF)
+                .store(SpecialProperty.ID, "id")
+                .store(SpecialProperty.REPO, "repo")
+                .out(Label.NAME_PERSON_REF)
+                .store(Key.NAME_NAME, "name")
+                .traversal());
+
+        // Spouse
+        query.addTraversal(new TraversalBuilder()
+                .v(id)
+                .set("traversal", "spouse")
+                .out(Label.MARRIAGE_SPOUSE_REF)
+                .in(Label.MARRIAGE_SPOUSE_REF)
+                .store(SpecialProperty.ID, "id")
+                .store(SpecialProperty.REPO, "repo")
+                .out(Label.NAME_PERSON_REF)
+                .store(Key.NAME_NAME, "name")
+                .traversal());
+
+        // Child
+        query.addTraversal(new TraversalBuilder()
+                .v(id)
+                .set("traversal", "child")
+                .out(Label.BIRTH_FATHER_REF, Label.BIRTH_MOTHER_REF)
+                .in(Label.BIRTH_CHILD_REF)
+                .store(SpecialProperty.ID, "id")
+                .store(SpecialProperty.REPO, "repo")
+                .out(Label.NAME_PERSON_REF)
+                .store(Key.NAME_NAME, "name")
+                .traversal());
+
+        query.execute(graph);
+
+        // Loop through and execute external requests
+        // TODO
+
+
+        // Collate results
+        LinkedHashMap<String, Object> family = new LinkedHashMap<>();
+        ArrayList<Object> parents = new ArrayList<>();
+        ArrayList<Object> spouses = new ArrayList<>();
+        ArrayList<Object> children = new ArrayList<>();
+
+
+        family.put("id", id);
+        family.put("repo", person.getRepo());
+
+        for (Traversal traversal: query.getTraversals().values()) {
+            HashMap<String, Object> payload = traversal.getPayload();
+            Object typeObject = payload.get("traversal");
+            String type = "";
+
+            if (typeObject != null && typeObject instanceof String) {
+                type = (String) typeObject;
+            }
+
+            switch (type) {
+                case "name":
+                    family.put("name", payload.get("name"));
+                    break;
+                case "birth":
+                    // TODO
+                    break;
+                case "death":
+                    // TODO
+                    break;
+                case "mother":
+                    // TODO
+                    break;
+                case "father":
+                    // TODO
+                    break;
+                case "spouse":
+                    // TODO filter out self
+                    break;
+                case "child":
+                    // TODO
+                    break;
+            }
+        }
+
+        family.put("query", query);
+
+        return Response
+                .status(Response.Status.OK)
+                .entity(family)
+                .build();
+
+        /**
         LinkedHashMap<String, Object> family = new LinkedHashMap<>();
 
         family.put("id", id);
@@ -124,6 +271,8 @@ public class Family {
                 .status(Response.Status.OK)
                 .entity(family)
                 .build();
+        */
+
     }
 
     /**
