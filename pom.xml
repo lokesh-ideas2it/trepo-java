@@ -115,6 +115,13 @@
             <version>2.3.1</version>
         </dependency>
 
+        <!-- Unirest TMP -->
+        <dependency>
+            <groupId>com.mashape.unirest</groupId>
+            <artifactId>unirest-java</artifactId>
+            <version>1.4.5</version>
+        </dependency>
+
         <!-- Testing -->
         <dependency>
             <groupId>org.testng</groupId>
