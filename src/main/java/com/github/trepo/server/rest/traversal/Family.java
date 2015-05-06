@@ -1,17 +1,9 @@
 package com.github.trepo.server.rest.traversal;
 
-import com.github.trepo.npipes.Query;
-import com.github.trepo.npipes.Step;
-import com.github.trepo.npipes.Traversal;
-import com.github.trepo.npipes.TraversalBuilder;
+import com.github.trepo.npipes.*;
 import com.github.trepo.npipes.gson.StepTypeAdapter;
-import com.github.trepo.ptree.model.core.PersonNameModel;
-import com.github.trepo.ptree.model.what.BirthModel;
-import com.github.trepo.ptree.model.what.DeathModel;
-import com.github.trepo.ptree.model.what.NameModel;
 import com.github.trepo.ptree.ref.Key;
 import com.github.trepo.ptree.ref.Label;
-import com.github.trepo.vgraph.Direction;
 import com.github.trepo.vgraph.Node;
 import com.github.trepo.vgraph.SpecialProperty;
 import com.github.trepo.vgraph.VGraph;
@@ -58,7 +50,7 @@ public class Family {
 
         // Name
         query.addTraversal(new TraversalBuilder()
-                .v(id)
+                .n(id)
                 .set("traversal", "name")
                 .out(Label.NAME_PERSON_REF)
                 .store(Key.NAME_NAME, "name")
@@ -66,7 +58,7 @@ public class Family {
 
         // Birth
         query.addTraversal(new TraversalBuilder()
-                .v(id)
+                .n(id)
                 .set("traversal", "birth")
                 .out(Label.BIRTH_CHILD_REF)
                 .as("birth")
@@ -80,7 +72,7 @@ public class Family {
 
         // Death
         query.addTraversal(new TraversalBuilder()
-                .v(id)
+                .n(id)
                 .set("traversal", "death")
                 .out(Label.DEATH_PERSON_REF)
                 .as("death")
@@ -94,7 +86,7 @@ public class Family {
 
         // Mother
         query.addTraversal(new TraversalBuilder()
-                .v(id)
+                .n(id)
                 .set("traversal", "mother")
                 .out(Label.BIRTH_CHILD_REF)
                 .in(Label.BIRTH_MOTHER_REF)
@@ -106,7 +98,7 @@ public class Family {
 
         // Father
         query.addTraversal(new TraversalBuilder()
-                .v(id)
+                .n(id)
                 .set("traversal", "father")
                 .out(Label.BIRTH_CHILD_REF)
                 .in(Label.BIRTH_FATHER_REF)
@@ -118,7 +110,7 @@ public class Family {
 
         // Spouse
         query.addTraversal(new TraversalBuilder()
-                .v(id)
+                .n(id)
                 .set("traversal", "spouse")
                 .out(Label.MARRIAGE_SPOUSE_REF)
                 .in(Label.MARRIAGE_SPOUSE_REF)
@@ -130,7 +122,7 @@ public class Family {
 
         // Child
         query.addTraversal(new TraversalBuilder()
-                .v(id)
+                .n(id)
                 .set("traversal", "child")
                 .out(Label.BIRTH_FATHER_REF, Label.BIRTH_MOTHER_REF)
                 .in(Label.BIRTH_CHILD_REF)
@@ -142,16 +134,17 @@ public class Family {
 
         query.execute(graph);
 
-        // Loop through and execute external requests
+        // Loop through and execute external requests (redirection)
         HashMap<String, Query> outstandingQueries = new HashMap<>();
         for (Traversal traversal: query.getTraversals().values()) {
-            if (traversal.isComplete()) {
+            if (traversal.getStatus().getFamily() != Status.Family.REDIRECTION) {
                 continue;
             }
             String repo = traversal.getPath().get(traversal.getPath().size()-1).getRepo();
             if (!outstandingQueries.containsKey(repo)) {
                 outstandingQueries.put(repo, new Query());
             }
+            traversal.setStatus(Status.RUNNING); // Restart traversal in external repo
             outstandingQueries.get(repo).addTraversal(traversal);
         }
 
@@ -199,7 +192,7 @@ public class Family {
 
         for (Traversal traversal: query.getTraversals().values()) {
             // Skip non complete/finished traversals
-            if (!traversal.isComplete() || traversal.getStep() < traversal.getSteps().size()) {
+            if (traversal.getStatus() != Status.FINISHED) {
                 continue;
             }
             HashMap<String, Object> payload = traversal.getPayload();
