@@ -148,14 +148,8 @@ public class Family {
                 continue;
             }
             HashMap<String, Object> payload = traversal.getPayload();
-            Object typeObject = payload.get("traversal");
-            String type = "";
 
-            if (typeObject != null && typeObject instanceof String) {
-                type = (String) typeObject;
-            }
-
-            switch (type) {
+            switch (traversal.getFromPayload("traversal", String.class)) {
                 case "name":
                     family.put("name", payload.get("name"));
                     break;
