@@ -36,6 +36,7 @@
 
         <ptree.version>0.1.0-SNAPSHOT</ptree.version>
         <npipes.version>0.1.0-SNAPSHOT</npipes.version>
+        <npipes-client.version>0.1.0-SNAPSHOT</npipes-client.version>
         <vgraph.version>0.5.0-SNAPSHOT</vgraph.version>
         <blueprints.version>2.6.0</blueprints.version>
         <jersey.version>2.13</jersey.version>
@@ -64,7 +65,14 @@
         <dependency>
             <groupId>com.github.trepo</groupId>
             <artifactId>npipes</artifactId>
-            <version>${ptree.version}</version>
+            <version>${npipes.version}</version>
+        </dependency>
+
+        <!-- nPipes Client -->
+        <dependency>
+            <groupId>com.github.trepo</groupId>
+            <artifactId>npipes-client</artifactId>
+            <version>${npipes-client.version}</version>
         </dependency>
 
         <!-- vGraph -->
@@ -113,13 +121,6 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.3.1</version>
-        </dependency>
-
-        <!-- Unirest TMP -->
-        <dependency>
-            <groupId>com.mashape.unirest</groupId>
-            <artifactId>unirest-java</artifactId>
-            <version>1.4.5</version>
         </dependency>
 
         <!-- Testing -->

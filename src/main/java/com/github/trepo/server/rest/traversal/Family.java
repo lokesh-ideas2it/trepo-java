@@ -1,17 +1,12 @@
 package com.github.trepo.server.rest.traversal;
 
 import com.github.trepo.npipes.*;
-import com.github.trepo.npipes.gson.StepTypeAdapter;
+import com.github.trepo.npipes.client.NPipesClient;
 import com.github.trepo.ptree.ref.Key;
 import com.github.trepo.ptree.ref.Label;
 import com.github.trepo.vgraph.Node;
 import com.github.trepo.vgraph.SpecialProperty;
 import com.github.trepo.vgraph.VGraph;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -40,7 +35,7 @@ public class Family {
     public Response putId(@PathParam("id") String id) {
 
         Node person = graph.getNode(id);
-        Iterator<Node> itr;
+        NPipesClient client = new NPipesClient();
 
         if (person == null || !person.getLabel().equals(Label.PERSON)) {
             throw new WebApplicationException("Person Not Found", Response.Status.NOT_FOUND);
@@ -132,50 +127,7 @@ public class Family {
                 .store(Key.NAME_NAME, "name")
                 .traversal());
 
-        query.execute(graph);
-
-        // Loop through and execute external requests (redirection)
-        HashMap<String, Query> outstandingQueries = new HashMap<>();
-        for (Traversal traversal: query.getTraversals().values()) {
-            if (traversal.getStatus().getFamily() != Status.Family.REDIRECTION) {
-                continue;
-            }
-            String repo = traversal.getPath().get(traversal.getPath().size()-1).getRepo();
-            if (!outstandingQueries.containsKey(repo)) {
-                outstandingQueries.put(repo, new Query());
-            }
-            traversal.setStatus(Status.RUNNING); // Restart traversal in external repo
-            outstandingQueries.get(repo).addTraversal(traversal);
-        }
-
-        if (outstandingQueries.size() > 0) {
-            Gson gson = new GsonBuilder()
-                    .registerTypeHierarchyAdapter(Step.class, new StepTypeAdapter())
-                    .setPrettyPrinting()
-                    .create();
-            for (String repo: outstandingQueries.keySet()) {
-
-                try {
-                    HttpResponse<String> response = Unirest.post(repo + "/npipes/query")
-                            .header("Content-Type", "application/json")
-                            .body(gson.toJson(outstandingQueries.get(repo)))
-                            .asString();
-
-                    //System.out.println(response.getBody());
-
-                    Query returnedQuery = gson.fromJson(response.getBody(), Query.class);
-
-                    for (Traversal returnedTraversal: returnedQuery.getTraversals().values()) {
-                        query.addTraversal(returnedTraversal);
-                    }
-
-                } catch (UnirestException e) {
-                    e.printStackTrace();
-                }
-
-
-            }
-        }
+        client.execute(query, graph);
 
         // Collate results
         LinkedHashMap<String, Object> family = new LinkedHashMap<>();
@@ -264,90 +216,6 @@ public class Family {
                 .status(Response.Status.OK)
                 .entity(family)
                 .build();
-
-        /**
-        LinkedHashMap<String, Object> family = new LinkedHashMap<>();
-
-        family.put("id", id);
-        family.put("repo", person.getRepo());
-
-
-        // Get Name
-        NameModel name = null;
-        for (Node node: person.getNodes(Direction.OUT, Label.NAME_PERSON_REF)) {
-            name = new NameModel(graph, node.getId());
-            name.readFromGraph();
-            break;
-        }
-        family.put("name", name);
-
-        // Get Birth
-        BirthModel birth = null;
-        for (Node node: person.getNodes(Direction.OUT, Label.BIRTH_CHILD_REF)) {
-            birth = new BirthModel(graph, node.getId());
-            birth.readFromGraph();
-            break;
-        }
-        family.put("birth", birth);
-
-        // Get Death
-        DeathModel death = null;
-        for (Node node: person.getNodes(Direction.OUT, Label.DEATH_PERSON_REF)) {
-            death = new DeathModel(graph, node.getId());
-            death.readFromGraph();
-            break;
-        }
-        family.put("death", death);
-
-        // Get Parents
-        HashSet<PersonNameModel> parents = new HashSet<>();
-        for (Node node: person.getNodes(Direction.OUT, Label.BIRTH_CHILD_REF)) {
-            itr = node.getNodes(Direction.IN, Label.BIRTH_FATHER_REF).iterator();
-            if (itr.hasNext()) {
-                PersonNameModel father = new PersonNameModel(graph, itr.next().getId());
-                father.readFromGraph();
-                parents.add(father);
-            }
-            itr = node.getNodes(Direction.IN, Label.BIRTH_MOTHER_REF).iterator();
-            if (itr.hasNext()) {
-                PersonNameModel mother = new PersonNameModel(graph, itr.next().getId());
-                mother.readFromGraph();
-                parents.add(mother);
-            }
-        }
-        family.put("parents", parents);
-
-        // Get Spouses
-        HashSet<PersonNameModel> spouses = new HashSet<>();
-        for (Node node: person.getNodes(Direction.OUT, Label.MARRIAGE_SPOUSE_REF)) {
-            for (Node spouse: node.getNodes(Direction.IN, Label.MARRIAGE_SPOUSE_REF)) {
-                if (!person.getId().equals(spouse.getId())) {
-                    PersonNameModel spouseModel = new PersonNameModel(graph, spouse.getId());
-                    spouseModel.readFromGraph();
-                    spouses.add(spouseModel);
-                }
-            }
-        }
-        family.put("spouses", spouses);
-
-        // Get Children
-        HashSet<PersonNameModel> children = new HashSet<>();
-        for (Node node: person.getNodes(Direction.OUT, Label.BIRTH_FATHER_REF, Label.BIRTH_MOTHER_REF)) {
-            itr = node.getNodes(Direction.IN, Label.BIRTH_CHILD_REF).iterator();
-            if (itr.hasNext()) {
-                PersonNameModel child = new PersonNameModel(graph, itr.next().getId());
-                child.readFromGraph();
-                children.add(child);
-            }
-        }
-        family.put("children", children);
-
-        return Response
-                .status(Response.Status.OK)
-                .entity(family)
-                .build();
-        */
-
     }
 
     /**
