@@ -9,6 +9,7 @@ import com.github.trepo.server.singleton.VGraphSingleton;
 import com.github.trepo.vgraph.VGraph;
 import com.tinkerpop.blueprints.impls.neo4j2.Neo4j2Graph;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
@@ -60,7 +61,8 @@ public class TrepoServer {
         ServletHolder pTree = new ServletHolder(new ServletContainer(new PTree()));
         context.addServlet(pTree, "/graph/*");
 
-        context.addFilter(CrossOriginFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
+        FilterHolder holder = context.addFilter(CrossOriginFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
+        holder.setInitParameter("allowedMethods", "HEAD,GET,POST,PUT,DELETE,PATCH");
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
