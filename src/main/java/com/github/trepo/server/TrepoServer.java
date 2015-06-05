@@ -62,7 +62,7 @@ public class TrepoServer {
         context.addServlet(pTree, "/graph/*");
 
         FilterHolder holder = context.addFilter(CrossOriginFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
-        holder.setInitParameter("allowedMethods", "HEAD,GET,POST,PUT,DELETE,PATCH");
+        holder.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "HEAD,GET,POST,PUT,DELETE,PATCH");
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
